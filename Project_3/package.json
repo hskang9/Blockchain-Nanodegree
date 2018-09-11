@@ -1,0 +1,21 @@
+{
+  "name": "private-blockchain",
+  "version": "1.0.0",
+  "description": "private blockchain from udacity-blockchain-nanodegree course",
+  "main": "simplechain.js",
+  "scripts": {
+    "test": "node testchain.js"
+  },
+  "keywords": [
+    "blockchain"
+  ],
+  "author": "Hyungsuk Kang",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.16.3",
+    "level": "^4.0.0",
+    "request": "^2.88.0",
+    "url-parse": "^1.4.3"
+  }
+}
