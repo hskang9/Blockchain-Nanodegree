@@ -14,7 +14,7 @@ let blockchain = new Blockchain();
 
 app.get("/block/:height", async function get(req, res) {
   try {
-    const response = await chain.getBlock(req.params.height);
+    const response = await blockchain.getBlock(req.params.height);
     res.status(200).json(response);
   } catch (err) {
     res.status(404).json({

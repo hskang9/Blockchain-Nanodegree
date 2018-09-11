@@ -44,6 +44,7 @@ node
 4: Instantiate blockchain with blockchain variable
 
 ```
+const Blockchain = require('simpleChain')
 let blockchain = new Blockchain();
 ```
 
@@ -94,13 +95,13 @@ and use curl to test the blockchain.
 ### Get current block height
 
 ```
-curl http://localhost:8000/height
+GET: curl http://localhost:8000/height
 ```
 
 ### Add a block to Blockchain
 
 ```
-curl http://localhost:8000/block
+POST: curl -X "POST" "http://localhost:8000/block" -H 'Content-Type: application/json' -d $'{"body": "block body contents}'
 ```
 
 Input(json):
