@@ -12,22 +12,10 @@ Installing Node and NPM is pretty straightforward using the installer package av
 
 ### Configuring your project
 
-- Use NPM to initialize your project and create package.json to store project dependencies.
+- Install packages and dependencies to this project's package.json file
 
 ```
-npm init
-```
-
-- Install crypto-js with --save flag to save dependency to our package.json file
-
-```
-npm install crypto-js --save
-```
-
-- Install level with --save flag
-
-```
-npm install level --save
+npm install
 ```
 
 ## Testing

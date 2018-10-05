@@ -35,12 +35,16 @@ app.post("/block", async function put(req, res) {
       status: 400,
       message: "Invalid Input: Fill the body parameter"
     });
+    return;
   }
-  await blockchain.addBlock(new Block(req.body.body));
-  const height = await blockchain.getBlockHeight();
-  const response = await blockchain.getBlock(height);
-
-  res.status(200).json(response);
+  else {
+    await blockchain.addBlock(new Block(req.body.body));
+    const height = await blockchain.getBlockHeight();
+    const response = await blockchain.getBlock(height);
+    res.status(200).json(response);
+    return;
+  }
+    
 });
 
 app.listen(8000);
