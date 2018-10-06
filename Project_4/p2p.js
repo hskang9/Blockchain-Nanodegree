@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 const requests = require("request");
 
 // Blockchain class
-const Blockchain = require("./simpleChain");
+const Blockchain = require("./blockchain");
 const Block = require("./block");
 
 // Transaction class
@@ -51,17 +51,17 @@ app.post("/block", async (req, res) => {
 });
 
 app.post("/requestValidation", async (req, res) => {
-  tx = new Transaction(req);
-  response = tx.requestValidation();
+  let tx = new Transaction(req);
+  const response = tx.requestValidation();
   res.status(200).json(response);
 });
 
 app.post("/message-signature/validate", async (req, res) => {
-  tx = new Transaction(req);
+  let tx = new Transaction(req);
   try {
-    response = tx.validateMessage();
+    const response = tx.validateMessage();
   } catch (err) {
-    response = err.message;
+    const response = err.message;
   }
   res.status(200).json(response);
 });

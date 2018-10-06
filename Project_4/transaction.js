@@ -14,46 +14,50 @@ class Transaction {
   }
 
   validateStar() {
-    star = this.req.body.star;
-    if (!data.dec)
+    let star = this.req.body.star;
+    if (!star.dec)
       throw new Error(
         "Wrong Input: dec parameter should be non-empty string property"
       );
-    if (!data.ra)
+    if (!star.ra)
       throw new Error(
         "Wrong Input: ra parameter should be non-empty string property"
       );
-    if (!data.story)
+    if (!star.story)
       throw new Error(
         "Wrong Input: story parameter should be non-empty string property"
       );
   }
 
   requestValidation() {
-    message = `${this.req.address}:${this.req.timestamp}:starRegistry`;
-    obj = {
+    let timestamp = new Date()
+        .getTime()
+        .toString()
+        .slice(0, -3);
+    let message = `${this.req.body.address}:${timestamp}:starRegistry`;
+    let obj = {
       message: message,
-      timestamp: this.req.timestamp,
+      timestamp: timestamp,
       validationWindow: 300
     };
-    db.put(this.req.account, obj);
+    db.put(this.req.body.address, obj);
 
     return obj;
   }
 
   deleteAccount() {
-    db.del(this.req.account);
+    db.del(this.req.body.address);
   }
 
   validateMessage() {
     this.validateCredentials();
-    now = new Date()
+    let now = new Date()
       .getTime()
       .toString()
       .slice(0, -3);
-    obj = db.get(account);
-    timestamp = obj.timestamp;
-    validationWindow = obj.validationWindow;
+    let obj = db.get(this.req.body.address);
+    let timestamp = obj.timestamp;
+    let validationWindow = obj.validationWindow;
 
     if (timestamp + validationWindow < now)
       throw new Error("Too late for Registration");
@@ -80,3 +84,5 @@ class Transaction {
     }
   }
 }
+
+module.exports = Transaction;
