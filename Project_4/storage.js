@@ -12,13 +12,14 @@ class Storage {
   // Put data to levelDB with key/value pair
   putLevelDBData(key, value) {
     return new Promise((resolve, reject) => {
+      this.db.open();
       this.db.put(key, value, function(err) {
         if (err) {
           console.log("Block " + key + " submission failed", err);
           reject(err);
         }
       });
-
+      this.db.close();
       resolve(`Put Data to #${key}`);
     });
   }
@@ -26,6 +27,7 @@ class Storage {
   // Get data from levelDB with key
   getLevelDBData(key) {
     return new Promise((resolve, reject) => {
+      this.db.open();
       this.db.get(key, function(err, value) {
         if (err) {
           console.log("Not found!", err);
@@ -34,6 +36,7 @@ class Storage {
         console.log("Value = " + JSON.stringify(value, null, 4));
         resolve(value);
       });
+      this.db.close();
     });
   }
 
@@ -48,11 +51,12 @@ class Storage {
         })
         .on("error", function(err) {
           console.log("Unable to read data stream!", err);
-          reject(error);
+          reject(err);
         })
         .on("close", function() {
           resolve(height);
         });
+      this.db.close();
     });
   }
 
@@ -60,7 +64,8 @@ class Storage {
     let blocks = [];
 
     return new Promise((resolve, reject) => {
-      db.createReadStream()
+      this.db
+        .createReadStream()
         .on("data", function(data) {
           if (data.key > 0) {
             block = data.value;
@@ -70,17 +75,19 @@ class Storage {
           }
         })
         .on("error", err => {
-          return reject(error);
+          return reject(err);
         })
         .on("close", () => {
           return resolve(blocks);
         });
+      this.db.close();
     });
   }
 
   getBlockByHash(hash) {
     return new Promise((resolve, reject) => {
-      db.createReadStream()
+      this.db
+        .createReadStream()
         .on("data", function(data) {
           if (data.key > 0) {
             block = data.value;
@@ -90,11 +97,12 @@ class Storage {
           }
         })
         .on("error", err => {
-          return reject(error);
+          return reject(err);
         })
         .on("close", () => {
           return "Block not found";
         });
+      this.db.close();
     });
   }
 }

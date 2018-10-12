@@ -35,14 +35,18 @@ app.get("/height", async (req, res) => {
 });
 
 app.post("/block", async (req, res) => {
-  if (req.body.body === "" || req.body.body === undefined) {
+  if (
+    req.body.star === "" ||
+    req.body.star === undefined ||
+    req.body.star.story.length > 500
+  ) {
     res.status(400).json({
       status: 400,
-      message: "Invalid Input: Fill the body parameter"
+      message: "Invalid Input: Fix star parameter"
     });
     return;
   } else {
-    await blockchain.addBlock(new Block(req.body.body));
+    await blockchain.addBlock(new Block(req.body.star));
     const height = await blockchain.getBlockHeight();
     const response = await blockchain.getBlock(height);
     res.status(200).json(response);
@@ -52,23 +56,20 @@ app.post("/block", async (req, res) => {
 
 app.post("/requestValidation", async (req, res) => {
   let tx = new Transaction(req);
-  const response = tx.requestValidation();
+  const response = await tx.requestValidation();
+  console.log(response);
   res.status(200).json(response);
 });
 
 app.post("/message-signature/validate", async (req, res) => {
   let tx = new Transaction(req);
-  try {
-    const response = tx.validateMessage();
-  } catch (err) {
-    const response = err.message;
-  }
+  const response = await tx.validateMessage();
   res.status(200).json(response);
 });
 
 app.get("/stars/:hash", async (req, res) => {
   try {
-    const response = await blockchain.getBlockByHash(req.body.hash);
+    const response = await blockchain.getBlockByHash(req.params.hash);
     res.status(200).json(response);
   } catch (err) {
     res.status(404).json({
@@ -80,7 +81,7 @@ app.get("/stars/:hash", async (req, res) => {
 
 app.get("/stars/:address", async (req, res) => {
   try {
-    const response = await blockchain.getBlocksByAddress(req.body.address);
+    const response = await blockchain.getBlocksByAddress(req.params.address);
     res.status(200).json(response);
   } catch (err) {
     res.status(404).json({
