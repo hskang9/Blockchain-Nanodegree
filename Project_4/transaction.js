@@ -62,6 +62,11 @@ class Transaction {
     }
   }
 
+  async isValid() {
+    const response = await storage.getLevelDBData(req.body.address);
+    return response.isValid;
+  }
+
   async validateMessage() {
     this.validateCredentials();
     let now = new Date()
@@ -69,8 +74,8 @@ class Transaction {
       .toString()
       .slice(0, -3);
     let value = await storage.getLevelDBData(this.req.body.address);
-    let timestamp = obj.timestamp;
-    let validationWindow = obj.validationWindow;
+    let timestamp = value.timestamp;
+    let validationWindow = value.validationWindow;
 
     if (now < timestamp + validationWindow)
       throw new Error("Too late for Registration");
@@ -85,8 +90,8 @@ class Transaction {
       let elapsed =
         300 - (now - value.timestamp) > 0 ? 300 - (now - value.timestamp) : 300;
       value.isValid = true;
-      await storage.putLevelDBData(this.req.body.address, value);
-      obj = {
+      storage.putLevelDBData(this.req.body.address, value);
+      let obj = {
         registerStar: true,
         status: {
           address: this.req.body.address,

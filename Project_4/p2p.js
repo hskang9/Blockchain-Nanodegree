@@ -35,6 +35,14 @@ app.get("/height", async (req, res) => {
 });
 
 app.post("/block", async (req, res) => {
+  let tx = new Transaction(req);
+  const response = await tx.isValid();
+  if (response !== true) {
+    res.status(400).json({
+      status: 400,
+      message: "Invalid Account: validate before adding star"
+    });
+  }
   if (
     req.body.star === "" ||
     req.body.star === undefined ||

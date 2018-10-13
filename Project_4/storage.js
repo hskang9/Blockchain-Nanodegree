@@ -19,8 +19,8 @@ class Storage {
           reject(err);
         }
       });
-      this.db.close();
       resolve(`Put Data to #${key}`);
+      this.db.close();
     });
   }
 
